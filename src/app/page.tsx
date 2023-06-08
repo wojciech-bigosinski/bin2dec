@@ -1,23 +1,22 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { ChangeEvent, useEffect, useState } from "react"
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function Home() {
-  const maxLength = 10;
-  const [input, setInput] = useState(0)
-  const [output, setOutput] = useState(0)
-  const [isMaxLength, setIsMaxLength] = useState(false);
+const Home: React.FC = () => {
+  const maxLength: number = 10;
+  const [input, setInput] = useState<string>("")
+  const [output, setOutput] = useState<number>(0)
+  const [isMaxLength, setIsMaxLength] = useState<boolean>(false);
 
   useEffect(() => {
     setIsMaxLength(input.toString().length >= maxLength);
   }, [input, maxLength]);
 
-  const onChange = (e) => {
-    let num = e.target.value;
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    let num: string = e.target.value;
     if (num.slice(-1) !== "0" && num.slice(-1) !== "1" && num !== "") {
-      console.log(num.slice(-1))
       toast.error("Not a binary character", {
         position: "bottom-left",
         autoClose: 2000,
@@ -31,13 +30,13 @@ export default function Home() {
     }
     num = num.replace(/[^0-1.]/g, '');
     setInput(num)
-    let dec_value = 0;
+    let dec_value: number = 0;
     // Initializing base value to 1, i.e 2^0
-    let base = 1;
+    let base: number = 1;
  
-    let temp = num;
+    let temp: number = parseInt(num, 10);
     while (temp) {
-        let last_digit = temp % 10;
+        let last_digit: number = temp % 10;
         temp = Math.floor(temp / 10);
  
         dec_value += last_digit * base;
@@ -78,3 +77,5 @@ export default function Home() {
     </div>
   )
 }
+
+export default Home;
