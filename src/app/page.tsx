@@ -1,6 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Home() {
   const maxLength = 10;
@@ -14,10 +16,22 @@ export default function Home() {
 
   const onChange = (e) => {
     let num = e.target.value;
+    if (num.slice(-1) !== "0" && num.slice(-1) !== "1" && num !== "") {
+      console.log(num.slice(-1))
+      toast.error("Not a binary character", {
+        position: "bottom-left",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: 0,
+        theme: "dark",
+      });
+    }
     num = num.replace(/[^0-1.]/g, '');
     setInput(num)
     let dec_value = 0;
- 
     // Initializing base value to 1, i.e 2^0
     let base = 1;
  
@@ -35,29 +49,32 @@ export default function Home() {
   }
 
   return (
-    <div className='h-screen flex flex-col items-center justify-between'>
-        <div className="mt-10 text-4xl h-40">
-          Bin2Dec
-        </div>
-        <div className="flex flex-row h-20">
-          <div className="flex flex-col text-black mr-4 justify-between">
-            <div className="p-2 mb-2 bg-white">
-              Bin:
+    <div>
+      <div className='h-screen flex flex-col items-center justify-between'>
+          <div className="mt-20 text-4xl h-40">
+            Bin2Dec
+          </div>
+          <div className="flex flex-row h-20">
+            <div className="flex flex-col text-black mr-4 justify-between pointer-events-none">
+              <div className="p-2 mb-2 bg-white">
+                Bin:
+              </div>
+              <div className="p-2 mt-2 bg-white">
+                Dec:
+              </div>
             </div>
-            <div className="p-2 mt-2 bg-white">
-              Dec:
+            <div className="flex flex-col justify-between">
+              <input className="p-2 mb-2 w-32 text-white flex flex-col bg-black caret-red-600 accent-red-600 border border-1 border-white focus:outline-none focus:border focus:border-1 focus:border-red-600" value={input} placeholder="0" type="text" onChange={onChange} maxLength={maxLength}/>
+              <div className="p-2 mt-2 pointer-events-none">
+                {output}
+              </div>
             </div>
           </div>
-          <div className="flex flex-col justify-between">
-            <input className="p-2 mb-2 w-32 text-white flex flex-col bg-black caret-red-600 accent-red-600 border border-1 border-transparent focus:outline-none focus:border focus:border-1 focus:border-red-600" value={input} placeholder="0" type="text" onChange={onChange} maxLength={maxLength}/>
-            <div className="p-2 mt-2">
-              {output}
-            </div>
+          <div className="h-40 mb-10 flex flex-col justify-end mb-20">
+            {isMaxLength && <p className="text-red-600 text-lg">Character limit reached</p>}
           </div>
-        </div>
-        <div className="h-40 mb-10">
-          {isMaxLength && <p className="text-red-600 text-lg">Character limit reached</p>}
-        </div>
+      </div>
+      <ToastContainer pauseOnFocusLoss={false}/>
     </div>
   )
 }
